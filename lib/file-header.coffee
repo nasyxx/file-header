@@ -263,7 +263,7 @@ module.exports = FileHeader =
   # the corresponding header template is presented
   hasHeader: (editor, buffer, headerTemplate) ->
     # these placeholder preambles are used as anchor points in source code scanning
-    if !(preambles = headerTemplate.match(/@[^:]+:/g))
+    if !(preambles = headerTemplate.match(/[@-#;\*][^:]+:/g))
       return false
     preambles = preambles.map(@escapeRegExp)
     re = new RegExp(preambles.join('|'), if atom.config.get('file-header.ignoreCaseInTemplateField', scope: (do editor.getRootScopeDescriptor)) then 'gi' else 'g')
@@ -276,7 +276,7 @@ module.exports = FileHeader =
 
   updateField: (editor, placeholder, headerTemplate, buffer, newValue) ->
     escaptedPlaceholder = @escapeRegExp(placeholder)
-    re = new RegExp(".*(@[^:]+:).*#{ escaptedPlaceholder }.*(?:\r\n|\r|\n)", 'g')
+    re = new RegExp(".*([@-#;\*][^:]+:).*#{ escaptedPlaceholder }.*(?:\r\n|\r|\n)", 'g')
     # find anchor point and line in current template
     while match = re.exec(headerTemplate)
       anchor = match[1]
